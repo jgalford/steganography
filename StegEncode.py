@@ -5,12 +5,23 @@
 
 # Import statements
 from PIL import Image
+from cryptography.fernet import Fernet
 
 # Counter variable
 i=0
 
+# Create a key
+key = Fernet.generate_key()
+f = Fernet(key)
+
+
 # Prompt the user for the message 
 message = input("Message to encode: ")
+
+# Encrypt the message
+message = f.encrypt(message.encode())
+
+print("Key: " + str(key))
 
 # Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
 message_bin = "".join([format(ord(i), "08b") for i in message])
