@@ -11,7 +11,8 @@ from cryptography.fernet import Fernet
 i=0
 
 # Create a key
-key = Fernet.generate_key()
+# key = Fernet.generate_key()
+key = bytes('somekey', 'utf-8')
 f = Fernet(key)
 
 
@@ -21,7 +22,7 @@ message = input("Message to encode: ")
 # Encrypt the message
 message = f.encrypt(message.encode())
 
-print("Key: " + str(key))
+# print("Key: " + str(key))
 
 # Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
 message_bin = "".join([format(ord(i), "08b") for i in message])

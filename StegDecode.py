@@ -7,9 +7,13 @@
 from PIL import Image
 from ast import literal_eval
 from bitarray import bitarray
+from cryptography.fernet import Fernet
 
 # Array to store extracted binary
 extracted_bin = []
+# Create a key
+key = bytes('somekey', 'utf-8')
+f = Fernet(key)
 
 # Open the image and determine size
 with Image.open("dyr_secret.png") as img:
@@ -31,6 +35,9 @@ data = str(bitarray(extracted_bin).tobytes())
 # Chop off first byte, and convert it from hex to integer
 data_len = data[4:6] + data[8:10]
 converted_len = int(data_len, 16)
+
+# Decrypt the message
+converted_len = f.decrypt(bytes(str(converted_len), 'utf-8'))
 
 # Debug statement
 print("The message is " + str(converted_len) + " characters.")
