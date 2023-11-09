@@ -10,17 +10,10 @@ from cryptography.fernet import Fernet
 # Counter variable
 i=0
 
-# Create a key
-# key = Fernet.generate_key()
-key = bytes('somekey', 'utf-8')
-f = Fernet(key)
 
 
 # Prompt the user for the message 
 message = input("Message to encode: ")
-
-# Encrypt the message
-message = f.encrypt(message.encode())
 
 # print("Key: " + str(key))
 

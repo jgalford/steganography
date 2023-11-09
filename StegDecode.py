@@ -11,10 +11,6 @@ from cryptography.fernet import Fernet
 
 # Array to store extracted binary
 extracted_bin = []
-# Create a key
-key = bytes('somekey', 'utf-8')
-f = Fernet(key)
-
 # Open the image and determine size
 with Image.open("dyr_secret.png") as img:
     width, height = img.size
