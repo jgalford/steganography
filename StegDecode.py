@@ -1,4 +1,4 @@
-# StegEncode.py
+# StegDecode.py
 # AUTHORS: Johnathan Alford, Dylan Lemon, Jack Long
 # DATE: 10/6/23
 # PURPOSE: Recover a message from inside the least significant bit(s) of a given image.
@@ -33,7 +33,7 @@ data_len = data[4:6] + data[8:10]
 converted_len = int(data_len, 16)
 
 # Decrypt the message
-converted_len = f.decrypt(bytes(str(converted_len), 'utf-8'))
+# converted_len = f.decrypt(bytes(str(converted_len), 'utf-8'))
 
 # Debug statement
 print("The message is " + str(converted_len) + " characters.")
