@@ -1,42 +1,41 @@
 # StegDecode.py
-# AUTHORS: Johnathan Alford, Dylan Lemon, Jack Long
-# DATE: 10/6/23
-# PURPOSE: Recover a message from inside the least significant bit(s) of a given image.
+# DESCRIPTION: This script utilizes steganography to extract a concealed message 
+# from the least significant bits of an image. Steganography is the practice of 
+# hiding information within a medium, in this case, subtly altering the RGB values 
+# of pixels in an image. 
 
-# Import statements
-from PIL import Image
-from ast import literal_eval
-from bitarray import bitarray
-from cryptography.fernet import Fernet
+# Import necessary libraries
+from PIL import Image  # Pillow library for image processing
+from bitarray import bitarray  # Efficient manipulation of binary data
 
-# Array to store extracted binary
+# Array to store the extracted binary data
 extracted_bin = []
-# Open the image and determine size
+
+# Open the image and determine its size
 with Image.open("dyr_secret.png") as img:
     width, height = img.size
 
-    # Nested loop to target every pixel in the image
-    for x in range(0, width):
-        for y in range(0, height):
+    # Loop through each pixel in the image
+    for x in range(width):
+        for y in range(height):
 
-            # Grab the RGB values at each location
+            # Get the RGB(Red Green Blue) values at the current pixel
             pixel = list(img.getpixel((x, y)))
-            for n in range(0,3):
-                # &1 is a bitmask so that only the last pixel is allowed through
-                extracted_bin.append(pixel[n]&1)
 
-# Get the extracted binary into a string
+            # Extract the least significant bit from each RGB value
+            for n in range(3):
+                # Using a bitmask (&1) to isolate the last bit
+                extracted_bin.append(pixel[n] & 1)
+
+# Convert the extracted binary data into a string
 data = str(bitarray(extracted_bin).tobytes())
 
-# Chop off first byte, and convert it from hex to integer
+# Extract the length of the hidden message from specific positions in the data
 data_len = data[4:6] + data[8:10]
 converted_len = int(data_len, 16)
 
-# Decrypt the message
-# converted_len = f.decrypt(bytes(str(converted_len), 'utf-8'))
-
-# Debug statement
+# Display the length of the hidden message for debugging purposes
 print("The message is " + str(converted_len) + " characters.")
 
-# Print only the necessary information
-print(data[10:10+converted_len]) #255 characters max?
+# Print only the necessary part of the hidden message
+print(data[10 : 10 + converted_len])  # The hidden message (up to 255 characters)
