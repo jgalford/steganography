@@ -7,12 +7,27 @@
 from PIL import Image
 from ast import literal_eval
 from bitarray import bitarray
+from cryptography.fernet import Fernet
+import hashlib
+from base64 import urlsafe_b64encode
 
 # Array to store extracted binary
 extracted_bin = []
 
+def decrypter(cipher_bin, password):
+    # Generate hash from password, convert to string
+    hash = hashlib.md5(password.encode()).hexdigest()
+    # Ciphertext has a b prepended when extracted. Remove or decryption fails.
+    ciphertext = cipher_bin[1:]
+    #print(ciphertext)
+    # Fernet key must be 32 bytes and urlsafe base 64 encoded
+    key = urlsafe_b64encode(hash.encode())
+    token = Fernet(key)
+    plaintext = token.decrypt(ciphertext.encode())
+    return plaintext.decode()
+
 # Open the image and determine size
-with Image.open("dyr_secret.png") as img:
+with Image.open("steganography/dyr_secret.png") as img:
     width, height = img.size
 
     # Nested loop to target every pixel in the image

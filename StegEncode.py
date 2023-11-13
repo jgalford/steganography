@@ -5,16 +5,34 @@
 
 # Import statements
 from PIL import Image
+from cryptography.fernet import Fernet
+import hashlib
+from base64 import urlsafe_b64encode
+
+def encrypter(plaintext, password):
+    # Generate hash from password, convert to string
+    hash = hashlib.md5(password.encode()).hexdigest()
+    # Fernet key must be 32 bytes and urlsafe base 64 encoded
+    key = urlsafe_b64encode(hash.encode())
+    token = Fernet(key)
+    ciphertext = token.encrypt(plaintext.encode())
+    #print(ciphertext)
+    return ciphertext.decode()
 
 # Counter variable
 i=0
 
 # Prompt the user for the message 
 message = input("Message to encode: ")
+password = input("Password to encrypt: ")
+
+# Encrypt message
+cipher_message = encrypter(message, password)
 
 # Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
-message_bin = "".join([format(ord(i), "08b") for i in message])
-data = bin(int(len(message)))[2:].zfill(16) + message_bin
+message_bin = "".join([format(ord(i), "08b") for i in cipher_message])
+data = bin(int(len(cipher_message)))[2:].zfill(16) + message_bin
+print(cipher_message)
 
 # Open the image and determine size
 with Image.open("dyr.png") as img:
