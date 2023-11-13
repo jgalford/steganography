@@ -40,4 +40,4 @@ with Image.open("dyr.png") as img:  # Open the image file using the Pillow libra
     img.save("dyr_secret.png", "PNG")  # Save the modified image in PNG format
 
 # Display a message indicating successful encoding
-print("Message successfully encoded and saved in 'dyr_secret.png'")
+print("I'm in! ¯\_( ͡° ͜ʖ ͡°)_/¯")
