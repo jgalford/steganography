@@ -1,7 +1,7 @@
 # StegEncode.py
 # AUTHORS: Johnathan Alford, Dylan Lemon, Jack Long
 # DATE: 10/6/23
-# PURPOSE: Hide a message inside the least significant bit(s) of a desired image.
+# PURPOSE: Hide a message inside the least significant bit(s) of a desired image. Get rekt NSA.
 
 # Import statements
 from PIL import Image
