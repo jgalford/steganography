@@ -12,16 +12,18 @@ i=0
 message = input("Message to encode: ")
 
 # Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
-message_bin = "".join([format(ord(i), "08b") for i in message])
-data = bin(int(len(message)))[2:].zfill(16) + message_bin
+message_bin = "".join([format(ord(i), "08b") for i in cipher_message])
+data = bin(int(len(cipher_message)))[2:].zfill(16) + message_bin
+print(cipher_message)
+print (len(cipher_message))
+print(data[0:16])
+# Open the image and determine size
+with Image.open("steganography/dyr.png") as img:
+    width, height = img.size
 
-# Open the chosen image and determine its size
-with Image.open("dyr.png") as img:  # Open the image file using the Pillow library
-    width, height = img.size  # Get the dimensions of the image
-
-    # Loop through every pixel in the image
-    for x in range(width):
-        for y in range(height):
+    # Nested loop to target every pixel in the image 
+    for x in range(0, width):
+        for y in range(0, height):
 
             # Obtain the RGB values at each location
             pixel = list(img.getpixel((x, y)))
@@ -34,10 +36,10 @@ with Image.open("dyr.png") as img:  # Open the image file using the Pillow libra
                     i += 1  # Move to the next bit in the data
 
             # Place the new pixel into the correct location
-            img.putpixel((x, y), tuple(pixel))
-
-    # Save the newly encoded image
-    img.save("dyr_secret.png", "PNG")  # Save the modified image in PNG format
+            img.putpixel((x,y), tuple(pixel))
+            
+    # Save the image
+    img.save("steganography/dyr_secret.png", "PNG")
 
 # Display a message indicating successful encoding
 print("I'm in! ¯\_( ͡° ͜ʖ ͡°)_/¯")

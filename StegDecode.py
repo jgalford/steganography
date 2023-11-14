@@ -8,9 +8,23 @@
 from PIL import Image
 from ast import literal_eval
 from bitarray import bitarray
+from cryptography.fernet import Fernet
+import hashlib
+from base64 import urlsafe_b64encode
 
-# Array to store the extracted binary data
+# Array to store extracted binary
 extracted_bin = []
+
+def decrypter(ciphertext, password):
+    # Generate hash from password, convert to string
+    hash = hashlib.md5(password.encode()).hexdigest()
+    # Ciphertext has a b prepended when extracted. Remove or decryption fails.
+    print(ciphertext)
+    # Fernet key must be 32 bytes and urlsafe base 64 encoded
+    key = urlsafe_b64encode(hash.encode())
+    token = Fernet(key)
+    plaintext = token.decrypt(ciphertext.encode())
+    return plaintext.decode()
 
 # Open the image and determine size
 with Image.open("dyr_secret.png") as img:
@@ -38,5 +52,5 @@ converted_len = int(data_len, 16)
 # Display the length of the hidden message for debugging purposes
 print("The message is " + str(converted_len) + " characters.")
 
-# Print only the necessary part of the hidden message
-print(data[10 : 10 + converted_len])  # The hidden message (up to 255 characters)
+# Print only the necessary information
+print(data[7:converted_len]) #255 characters max?
