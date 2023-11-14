@@ -24,7 +24,7 @@ def decrypter(ciphertext, password):
     return plaintext.decode()
 
 # Open the image and determine size
-with Image.open("steganography/dyr_secret.png") as img:
+with Image.open("dyr_secret.png") as img:
     width, height = img.size
 
     # Nested loop to target every pixel in the image
