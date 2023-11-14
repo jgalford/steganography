@@ -22,17 +22,14 @@ with Image.open("dyr_secret.png") as img:
             # Get the RGB(Red Green Blue) values at the current pixel
             pixel = list(img.getpixel((x, y)))
 
-            # Extract the least significant bit from each RGB value
-            for n in range(3):
-                # Using a bitmask (&1) to isolate the last bit
-                extracted_bin.append(pixel[n] & 1)
+            # Extract the least significant bit from each RGB value and append to the array
+            extracted_bin.extend(pixel[n] & 1 for n in range(3))
 
 # Convert the extracted binary data into a string
 data = str(bitarray(extracted_bin).tobytes())
 
 # Extract the length of the hidden message from specific positions in the data
-data_len = data[4:6] + data[8:10]
-converted_len = int(data_len, 16)
+converted_len = int(data[4:6] + data[8:10], 16)
 
 # Display the length of the hidden message for debugging purposes
 print("The message is " + str(converted_len) + " characters.")
