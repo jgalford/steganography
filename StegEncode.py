@@ -56,4 +56,3 @@ with Image.open("steganography/dyr.png") as img:
             
     # Save the image
     img.save("steganography/dyr_secret.png", "PNG")
-
