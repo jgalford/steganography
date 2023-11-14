@@ -36,7 +36,7 @@ print(cipher_message)
 print (len(cipher_message))
 print(data[0:16])
 # Open the image and determine size
-with Image.open("steganography/dyr.png") as img:
+with Image.open("dyr.png") as img:
     width, height = img.size
 
     # Nested loop to target every pixel in the image 
