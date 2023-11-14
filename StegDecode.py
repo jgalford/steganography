@@ -4,14 +4,15 @@
 # hiding information within a medium, in this case, subtly altering the RGB values 
 # of pixels in an image. 
 
-# Import necessary libraries
-from PIL import Image  # Pillow library for image processing
-from bitarray import bitarray  # Efficient manipulation of binary data
+# Import statements
+from PIL import Image
+from ast import literal_eval
+from bitarray import bitarray
 
 # Array to store the extracted binary data
 extracted_bin = []
 
-# Open the image and determine its size
+# Open the image and determine size
 with Image.open("dyr_secret.png") as img:
     width, height = img.size
 

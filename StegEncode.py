@@ -2,18 +2,18 @@
 # DESCRIPTION: This script enables the concealment of a message within the least 
 # significant bits of a selected image using steganography.
 
-# Import necessary libraries
-from PIL import Image  # Import the Image class from the Pillow library for image processing
+# Import statements
+from PIL import Image
 
-# Counter variable to keep track of the message encoding
-i = 0  # Initialize a counter for tracking the position in the message data
+# Counter variable
+i=0
 
-# Prompt the user for the message to be encoded
-message = input("Message to encode: ")  # Get user input for the message to be hidden
+# Prompt the user for the message 
+message = input("Message to encode: ")
 
-# Convert the message to binary and prepend a byte(s) to indicate the message length
-message_bin = "".join([format(ord(char), "08b") for char in message])  # Convert each character to 8-bit binary representation
-data = bin(len(message))[2:].zfill(16) + message_bin  # Prepend a 16-bit binary representation of the message length
+# Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
+message_bin = "".join([format(ord(i), "08b") for i in message])
+data = bin(int(len(message)))[2:].zfill(16) + message_bin
 
 # Open the chosen image and determine its size
 with Image.open("dyr.png") as img:  # Open the image file using the Pillow library
