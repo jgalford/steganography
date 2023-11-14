@@ -11,14 +11,12 @@ from cryptography.fernet import Fernet
 import hashlib
 from base64 import urlsafe_b64encode
 
-# Hello. Is it me you're looking for?
+# Array to store extracted binary
 extracted_bin = []
-
+password = input("Enter password: ")
 def decrypter(ciphertext, password):
     # Generate hash from password, convert to string
     hash = hashlib.md5(password.encode()).hexdigest()
-    # Ciphertext has a b prepended when extracted. Remove or decryption fails.
-    print(ciphertext)
     # Fernet key must be 32 bytes and urlsafe base 64 encoded
     key = urlsafe_b64encode(hash.encode())
     token = Fernet(key)
@@ -26,7 +24,7 @@ def decrypter(ciphertext, password):
     return plaintext.decode()
 
 # Open the image and determine size
-with Image.open("steganography/dyr_secret.png") as img:
+with Image.open("dyr_secret.png") as img:
     width, height = img.size
 
     # Nested loop to target every pixel in the image
@@ -42,12 +40,14 @@ with Image.open("steganography/dyr_secret.png") as img:
 # Get the extracted binary into a string
 data = str(bitarray(extracted_bin).tobytes())
 
-# Chop off first byte, and convert it from hex to integer
-data_len = data[4:6] + data[8:10]
-converted_len = int(data_len, 16)
+# Chop off first byte, and convert it from binary to integer
+data_len = str(bitarray(extracted_bin[:16]))
+converted_len = int(data_len[10:-2], 2)
 
 # Debug statement
 print("The message is " + str(converted_len) + " characters.")
 
 # Print only the necessary information
-print(data[7:converted_len]) #255 characters max?
+print(data[7:converted_len+7]) #255 characters max?
+
+print(decrypter(data[7:converted_len+7], password))
