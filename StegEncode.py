@@ -33,9 +33,10 @@ cipher_message = encrypter(message, password)
 message_bin = "".join([format(ord(i), "08b") for i in cipher_message])
 data = bin(int(len(cipher_message)))[2:].zfill(16) + message_bin
 print(cipher_message)
-
+print (len(cipher_message))
+print(data[0:16])
 # Open the image and determine size
-with Image.open("dyr.png") as img:
+with Image.open("steganography/dyr.png") as img:
     width, height = img.size
 
     # Nested loop to target every pixel in the image 
@@ -54,5 +55,5 @@ with Image.open("dyr.png") as img:
             img.putpixel((x,y), tuple(pixel))
             
     # Save the image
-    img.save("dyr_secret.png", "PNG")
+    img.save("steganography/dyr_secret.png", "PNG")
 

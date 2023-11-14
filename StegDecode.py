@@ -11,15 +11,14 @@ from cryptography.fernet import Fernet
 import hashlib
 from base64 import urlsafe_b64encode
 
-# Array to store extracted binary
+# Hello. Is it me you're looking for?
 extracted_bin = []
 
-def decrypter(cipher_bin, password):
+def decrypter(ciphertext, password):
     # Generate hash from password, convert to string
     hash = hashlib.md5(password.encode()).hexdigest()
     # Ciphertext has a b prepended when extracted. Remove or decryption fails.
-    ciphertext = cipher_bin[1:]
-    #print(ciphertext)
+    print(ciphertext)
     # Fernet key must be 32 bytes and urlsafe base 64 encoded
     key = urlsafe_b64encode(hash.encode())
     token = Fernet(key)
@@ -51,4 +50,4 @@ converted_len = int(data_len, 16)
 print("The message is " + str(converted_len) + " characters.")
 
 # Print only the necessary information
-print(data[10:10+converted_len]) #255 characters max?
+print(data[7:converted_len]) #255 characters max?
