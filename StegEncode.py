@@ -31,9 +31,7 @@ cipher_message = encrypter(message, password)
 # Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
 message_bin = "".join([format(ord(i), "08b") for i in cipher_message])
 data = bin(int(len(cipher_message)))[2:].zfill(16) + message_bin
-print(cipher_message)
-print (len(cipher_message))
-print(data[0:16])
+
 # Open the image and determine size
 with Image.open("dyr.png") as img:
     width, height = img.size
