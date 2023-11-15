@@ -2,26 +2,45 @@
 # DESCRIPTION: This script enables the concealment of a message within the least 
 # significant bits of a selected image using steganography.
 
-# Import necessary libraries
-from PIL import Image  # Import the Image class from the Pillow library for image processing
+# Import statements
+from PIL import Image
+from cryptography.fernet import Fernet
+import hashlib
+from base64 import urlsafe_b64encode
 
-# Counter variable to keep track of the message encoding
-i = 0  # Initialize a counter for tracking the position in the message data
+def encrypter(plaintext, password):
+    # Generate hash from password, convert to string
+    hash = hashlib.md5(password.encode()).hexdigest()
+    # Fernet key must be 32 bytes and urlsafe base 64 encoded
+    key = urlsafe_b64encode(hash.encode())
+    token = Fernet(key)
+    ciphertext = token.encrypt(plaintext.encode())
+    #print(ciphertext)
+    return ciphertext.decode()
 
-# Prompt the user for the message to be encoded
-message = input("Message to encode: ")  # Get user input for the message to be hidden
+# Counter variable
+i=0
 
-# Convert the message to binary and prepend a byte(s) to indicate the message length
-message_bin = "".join([format(ord(char), "08b") for char in message])  # Convert each character to 8-bit binary representation
-data = bin(len(message))[2:].zfill(16) + message_bin  # Prepend a 16-bit binary representation of the message length
+# Prompt the user for the message 
+message = input("Message to encode: ")
+password = input("Password to encrypt: ")
 
-# Open the chosen image and determine its size
-with Image.open("dyr.png") as img:  # Open the image file using the Pillow library
-    width, height = img.size  # Get the dimensions of the image
+# Encrypt message
+cipher_message = encrypter(message, password)
 
-    # Loop through every pixel in the image
-    for x in range(width):
-        for y in range(height):
+# Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
+message_bin = "".join([format(ord(i), "08b") for i in cipher_message])
+data = bin(int(len(cipher_message)))[2:].zfill(16) + message_bin
+print(cipher_message)
+print (len(cipher_message))
+print(data[0:16])
+# Open the image and determine size
+with Image.open("dyr.png") as img:
+    width, height = img.size
+
+    # Nested loop to target every pixel in the image 
+    for x in range(0, width):
+        for y in range(0, height):
 
             # Obtain the RGB values at each location
             pixel = list(img.getpixel((x, y)))

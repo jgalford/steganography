@@ -4,12 +4,25 @@
 # hiding information within a medium, in this case, subtly altering the RGB values 
 # of pixels in an image. 
 
-# Import necessary libraries
-from PIL import Image  # Pillow library for image processing
-from bitarray import bitarray  # Efficient manipulation of binary data
+# Import statements
+from PIL import Image
+from ast import literal_eval
+from bitarray import bitarray
+from cryptography.fernet import Fernet
+import hashlib
+from base64 import urlsafe_b64encode
 
 # Array to store the extracted binary data
 extracted_bin = []
+password = input("Enter password: ")
+def decrypter(ciphertext, password):
+    # Generate hash from password, convert to string
+    hash = hashlib.md5(password.encode()).hexdigest()
+    # Fernet key must be 32 bytes and urlsafe base 64 encoded
+    key = urlsafe_b64encode(hash.encode())
+    token = Fernet(key)
+    plaintext = token.decrypt(ciphertext.encode())
+    return plaintext.decode()
 
 # Open the image and determine its size
 with Image.open("dyr_secret.png") as img:
@@ -25,14 +38,17 @@ with Image.open("dyr_secret.png") as img:
             # Extract the least significant bit from each RGB value and append to the array
             extracted_bin.extend(pixel[n] & 1 for n in range(3))
 
-# Convert the extracted binary data into a string
+# Get the extracted binary into a string
+
 data = str(bitarray(extracted_bin).tobytes())
 
-# Extract the length of the hidden message from specific positions in the data
-converted_len = int(data[4:6] + data[8:10], 16)
+# Chop off first byte, and convert it from binary to integer
+data_len = str(bitarray(extracted_bin[:16]))
 
-# Display the length of the hidden message for debugging purposes
-print("The message is " + str(converted_len) + " characters.")
+converted_len = int(data_len[10:-2], 2)
 
-# Print only the necessary part of the hidden message
-print(data[10 : 10 + converted_len])  # The hidden message (up to 255 characters)
+# Weird stuff be happening
+if (converted_len >= 140):
+    print(decrypter(data[10:converted_len+10], password))
+else:
+    print(decrypter(data[7:converted_len+7], password))
