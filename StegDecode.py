@@ -5,8 +5,18 @@
 
 # Import statements
 from PIL import Image
-from ast import literal_eval
 from bitarray import bitarray
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+
+
+with open("private_key.pem", "rb") as key_file:
+    private_key = serialization.load_pem_private_key(
+        key_file.read(),
+        password=None
+    )
+
+
 
 # Array to store extracted binary
 extracted_bin = []
@@ -25,12 +35,31 @@ with Image.open("dyr_secret.png") as img:
                 # &1 is a bitmask so that only the last pixel is allowed through
                 extracted_bin.append(pixel[n]&1)
 
+
+extracted_bytes = bytes(extracted_bin)
+
+print("Ciphertext length:", len(extracted_bytes))
+print("Key size:", private_key.key_size)
+
+decrypted_message_bytes = private_key.decrypt(
+    extracted_bytes,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None,
+    )
+)
+
+
 # Get the extracted binary into a string
 data = str(bitarray(extracted_bin).tobytes())
 
 # Chop off first byte, and convert it from hex to integer
 data_len = data[4:6] + data[8:10]
 converted_len = int(data_len, 16)
+
+
+
 
 # Debug statement
 print("The message is " + str(converted_len) + " characters.")
