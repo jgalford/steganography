@@ -46,12 +46,6 @@ data_len = str(bitarray(extracted_bin[:16]))
 
 converted_len = int(data_len[10:-2], 2)
 
-# Debug statement
-print("The message is " + str(converted_len) + " characters.")
-
-# Print only the necessary information
-print(data[10:converted_len+10]) #255 characters max?
-
 # Weird stuff be happening
 if (converted_len >= 140):
     print(decrypter(data[10:converted_len+10], password))
