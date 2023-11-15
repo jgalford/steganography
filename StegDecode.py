@@ -1,7 +1,8 @@
-# StegEncode.py
-# AUTHORS: Johnathan Alford, Dylan Lemon, Jack Long
-# DATE: 10/6/23
-# PURPOSE: Recover a message from inside the least significant bit(s) of a given image.
+# StegDecode.py
+# DESCRIPTION: This script utilizes steganography to extract a concealed message 
+# from the least significant bits of an image. Steganography is the practice of 
+# hiding information within a medium, in this case, subtly altering the RGB values 
+# of pixels in an image. 
 
 # Import statements
 from PIL import Image
@@ -11,7 +12,7 @@ from cryptography.fernet import Fernet
 import hashlib
 from base64 import urlsafe_b64encode
 
-# Array to store extracted binary
+# Array to store the extracted binary data
 extracted_bin = []
 password = input("Enter password: ")
 def decrypter(ciphertext, password):
@@ -23,19 +24,19 @@ def decrypter(ciphertext, password):
     plaintext = token.decrypt(ciphertext.encode())
     return plaintext.decode()
 
-# Open the image and determine size
+# Open the image and determine its size
 with Image.open("dyr_secret.png") as img:
     width, height = img.size
 
-    # Nested loop to target every pixel in the image
-    for x in range(0, width):
-        for y in range(0, height):
+    # Loop through each pixel in the image
+    for x in range(width):
+        for y in range(height):
 
-            # Grab the RGB values at each location
+            # Get the RGB(Red Green Blue) values at the current pixel
             pixel = list(img.getpixel((x, y)))
-            for n in range(0,3):
-                # &1 is a bitmask so that only the last pixel is allowed through
-                extracted_bin.append(pixel[n]&1)
+
+            # Extract the least significant bit from each RGB value and append to the array
+            extracted_bin.extend(pixel[n] & 1 for n in range(3))
 
 # Get the extracted binary into a string
 

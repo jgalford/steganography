@@ -1,7 +1,6 @@
 # StegEncode.py
-# AUTHORS: Johnathan Alford, Dylan Lemon, Jack Long
-# DATE: 10/6/23
-# PURPOSE: Hide a message inside the least significant bit(s) of a desired image.
+# DESCRIPTION: This script enables the concealment of a message within the least 
+# significant bits of a selected image using steganography.
 
 # Import statements
 from PIL import Image
@@ -32,9 +31,7 @@ cipher_message = encrypter(message, password)
 # Convert the message to binary and add a byte(s) at the beginning to indicate how long the message is
 message_bin = "".join([format(ord(i), "08b") for i in cipher_message])
 data = bin(int(len(cipher_message)))[2:].zfill(16) + message_bin
-print(cipher_message)
-print (len(cipher_message))
-print(data[0:16])
+
 # Open the image and determine size
 with Image.open("dyr.png") as img:
     width, height = img.size
@@ -43,17 +40,21 @@ with Image.open("dyr.png") as img:
     for x in range(0, width):
         for y in range(0, height):
 
-            # Grab the RGB values at each location
+            # Obtain the RGB values at each location
             pixel = list(img.getpixel((x, y)))
-            for n in range(0,3):
-                if(i < len(data)): # If there is still data to inject, add the data
-                    # ~1 is masking off the last bit so that | will inject the data into the pixel
+
+            # If there is still data to inject, add the data to the least significant bit of each color channel
+            for n in range(3):
+                if i < len(data):
+                    # ~1 is masking off the last bit, and | injects the data into the pixel
                     pixel[n] = pixel[n] & ~1 | int(data[i])
-                    i+=1
+                    i += 1  # Move to the next bit in the data
 
             # Place the new pixel into the correct location
-            img.putpixel((x,y), tuple(pixel))
-            
-    # Save the image
-    img.save("dyr_secret.png", "PNG")
+            img.putpixel((x, y), tuple(pixel))
 
+    # Save the newly encoded image
+    img.save("dyr_secret.png", "PNG")  # Save the modified image in PNG format
+
+# Display a message indicating successful encoding
+print("I'm in! ¯\_( ͡° ͜ʖ ͡°)_/¯")
