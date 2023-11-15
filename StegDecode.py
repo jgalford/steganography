@@ -38,16 +38,23 @@ with Image.open("dyr_secret.png") as img:
                 extracted_bin.append(pixel[n]&1)
 
 # Get the extracted binary into a string
+print(extracted_bin[0:16])
 data = str(bitarray(extracted_bin).tobytes())
-
+print(data[0:16])
 # Chop off first byte, and convert it from binary to integer
 data_len = str(bitarray(extracted_bin[:16]))
+print (data_len)
 converted_len = int(data_len[10:-2], 2)
 
 # Debug statement
 print("The message is " + str(converted_len) + " characters.")
 
 # Print only the necessary information
-print(data[7:converted_len+7]) #255 characters max?
+print(data[10:converted_len+10]) #255 characters max?
+print(data[:10])
 
-print(decrypter(data[7:converted_len+7], password))
+# Weird stuff be happening
+if (converted_len >= 140):
+    print(decrypter(data[10:converted_len+10], password))
+else:
+    print(decrypter(data[7:converted_len+7], password))
