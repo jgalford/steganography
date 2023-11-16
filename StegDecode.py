@@ -15,7 +15,6 @@ from base64 import urlsafe_b64encode
 
 # Array to store the extracted binary data
 extracted_bin = []
-password = input("Enter password: ")
 def decrypter(ciphertext, password):
     # Generate hash from password, convert to string
     hash = hashlib.md5(password.encode()).hexdigest()
@@ -47,8 +46,10 @@ if(len(sys.argv)<2):
     python3 StegDecode.py /Path/To/Target/File.png
 ''')
     source = input("What file do you want to decode: ")
+    password = input("What is the password: ")
 else:
-   source = sys.argv[1];
+   source = sys.argv[1]
+   password = input("What is the password: ")
 
 
 
