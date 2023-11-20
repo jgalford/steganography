@@ -75,4 +75,3 @@ with Image.open("dyr.png") as img:
             
     # Save the image
     img.save("dyr_secret.png", "PNG")
-
