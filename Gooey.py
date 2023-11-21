@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from tkinter import messagebox
 from PIL import Image
 from cryptography.fernet import Fernet
 import hashlib
@@ -9,7 +10,7 @@ from bitarray import bitarray
 window = tk.Tk()
 window.title("Welcome to Stegosaur!")
 
-window.rowconfigure(0, minsize=230, weight=1)
+window.rowconfigure(0, minsize=300, weight=1)
 window.columnconfigure(1, minsize=400, weight=1)
 
 ende = 'e'
@@ -17,31 +18,37 @@ filename = ''
 mes = tk.StringVar()
 pas = tk.StringVar()
 
-def ende_swap():
+def en_swap():
     global ende
     if ende == 'd':
         ende = 'e'
+        lbl_demode.grid_forget()
         lbl_depassword.grid_forget()
         ent_password.delete(0, 'end')
         ent_password.grid_forget()
         btn_go.grid_forget()
-        lbl_encode.grid(row = 0, column = 0, sticky = "ew", padx = 5, pady = 5)
-        ent_message.grid(row = 0, column = 1, padx = 5, pady = 5)
-        lbl_enpassword.grid(row = 1, column = 0, sticky = "ew", padx = 5, pady = 5)
-        ent_password.grid(row = 1, column = 1, sticky = "ew", padx = 5, pady = 5)
-        btn_go.grid(row = 2, column = 1, padx = 5, pady = 10)
+        lbl_enmode.grid(row = 0, column = 1, sticky = "ew", padx = 5, pady = 5)
+        lbl_encode.grid(row = 1, column = 0, sticky = "ew", padx = 5, pady = 5)
+        ent_message.grid(row = 1, column = 1, padx = 5, pady = 5)
+        lbl_enpassword.grid(row = 2, column = 0, sticky = "ew", padx = 5, pady = 5)
+        ent_password.grid(row = 2, column = 1, sticky = "ew", padx = 5, pady = 5)
+        btn_go.grid(row = 3, column = 1, padx = 5, pady = 10)
 
-    else:
+def de_swap():
+    global ende
+    if ende == 'e':
         ende = 'd'
+        lbl_enmode.grid_forget()
         lbl_encode.grid_forget()
         lbl_enpassword.grid_forget()
         ent_message.delete(0, 'end')
         ent_password.delete(0, 'end')
         ent_message.grid_forget()
         ent_password.grid_forget()
-        lbl_depassword.grid(row = 0, column = 0, sticky = "ew", padx = 5, pady = 5)
-        ent_password.grid(row = 0, column = 1, sticky = "ew", padx = 5, pady = 5)
-        btn_go.grid(row = 1, column = 1, padx = 5, pady = 10)
+        lbl_demode.grid(row = 0, column = 1, sticky = "ew", padx = 5, pady = 5)
+        lbl_depassword.grid(row = 1, column = 0, sticky = "ew", padx = 5, pady = 5)
+        ent_password.grid(row = 1, column = 1, sticky = "ew", padx = 5, pady = 5)
+        btn_go.grid(row = 2, column = 1, padx = 5, pady = 10)
 
 def open():
     global filename 
@@ -49,6 +56,10 @@ def open():
         title = 'Choose a .png image',
         filetypes=[('Image files', '*.png')]
     )
+    if filename:
+        messagebox.showinfo(title = 'File Opened', message = 'Opened ' + filename, parent = window, default = 'ok')
+    else:
+        messagebox.showwarning(title = "Error", message = "No file selected.", parent = window, default = 'ok')
 
 def encrypter(plaintext, password):
     # Generate hash from password, convert to string
@@ -111,6 +122,7 @@ def run ():
                     # Save the image
             savename = asksaveasfilename(title = 'Save As...', filetypes=[('Image files', '*.png')], defaultextension = '.png')
             img.save(savename)
+            messagebox.showinfo(title = "Encoding complete", message = "Encoding complete. Saved to: " + savename, parent = window, default = 'ok')
     else:
         with Image.open(filename) as img:
             width, height = img.size
@@ -136,16 +148,20 @@ def run ():
 
 # Weird stuff be happening
         if (converted_len >= 140):
-            print(decrypter(data[10:converted_len+10], password))
+            dec_message = decrypter(data[10:converted_len+10], password)
+            messagebox.showinfo(title = "Decoded message", message = dec_message, parent = window, default = 'ok')
         else:
-            print(decrypter(data[7:converted_len+7], password))
+            dec_message = decrypter(data[7:converted_len+7], password)
+            messagebox.showinfo(title = "Decoded message", message = dec_message, parent = window, default = 'ok')
+
+    
 
 
 frm_buttons = tk.Frame(window, relief=tk.RAISED, bd=2)
 lbl_menu = tk.Label(frm_buttons, text = "Menu")
 btn_open = tk.Button(frm_buttons, text="Open", command = open)
-btn_encode = tk.Button (frm_buttons, text = "Encode Mode", command = ende_swap)
-btn_decode = tk.Button (frm_buttons, text = "Decode Mode", command = ende_swap)
+btn_encode = tk.Button (frm_buttons, text = "Encode Mode", command = en_swap)
+btn_decode = tk.Button (frm_buttons, text = "Decode Mode", command = de_swap)
 #btn_save = tk.Button(frm_buttons, text="Save As...")
 btn_help = tk.Button(frm_buttons, text = "Help!")
 
@@ -157,19 +173,22 @@ btn_decode.grid(row = 3, column = 0, sticky = "ew", padx = 5, pady = 10)
 btn_help.grid(row = 4, column = 0, sticky = "ew", padx = 5, pady = 10)
 
 frm_secrets = tk.Frame(window, relief = tk.RIDGE, bd = 2)
+lbl_enmode = tk.Label(frm_secrets, text = "Encode Mode", font = ("Times New Roman", 15))
 lbl_encode = tk.Label (frm_secrets, text = "Enter text to encode: ")
 lbl_enpassword = tk.Label(frm_secrets, text = "Enter password to encrypt: ")
+lbl_demode = tk.Label(frm_secrets, text = "Decode Mode", font = ("Times New Roman", 15))
 lbl_depassword = tk.Label(frm_secrets, text = "Enter password to decode: ")
 ent_message = tk.Entry(frm_secrets, textvariable = mes, width = 50)
 ent_password = tk.Entry(frm_secrets, textvariable = pas, width = 50, show = '*')
 btn_go = tk.Button(frm_secrets, text = "Run", padx = 10, pady = 5, command = run)
 
-lbl_encode.grid(row = 0, column = 0, sticky = "ew", padx = 5, pady = 5)
-ent_message.grid(row = 0, column = 1, padx = 5, pady = 5)
-lbl_enpassword.grid(row = 1, column = 0, sticky = "ew", padx = 5, pady = 5)
-ent_password.grid(row = 1, column = 1, sticky = "ew", padx = 5, pady = 5)
+lbl_enmode.grid(row = 0, column = 1, sticky = "ew", padx = 5, pady = 5)
+lbl_encode.grid(row = 1, column = 0, sticky = "ew", padx = 5, pady = 5)
+ent_message.grid(row = 1, column = 1, padx = 5, pady = 5)
+lbl_enpassword.grid(row = 2, column = 0, sticky = "ew", padx = 5, pady = 5)
+ent_password.grid(row = 2, column = 1, sticky = "ew", padx = 5, pady = 5)
 
-btn_go.grid(row = 2, column = 1, padx = 5, pady = 10)
+btn_go.grid(row = 3, column = 1, padx = 5, pady = 10)
 
 frm_buttons.grid(row=0, column=0, sticky="ns", )
 frm_secrets.grid(row = 0, column = 1, sticky = "ns", padx = 20, pady = 50)
