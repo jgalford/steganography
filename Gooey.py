@@ -64,6 +64,16 @@ def de_swap():
         ent_password.grid(row = 1, column = 1, sticky = "ew", padx = 5, pady = 5)
         btn_go.grid(row = 2, column = 1, padx = 5, pady = 10)
 
+# Help text
+def help():
+    helptext = """Thanks for using Stegosaur!\n" 
+    How to use:\n
+    Open: Select an image to encode or decode. Must be .png\n
+    Encode Mode: Encrypt a message and hide it in your image.\n
+    Decode Mode: Enter the password to retrieve the hidden message.\n
+    Help!: Display explanation.\n
+    Exit: Quit program."""
+    messagebox.showinfo(title = "Help", message = helptext, parent = window, default = 'ok')
 # Open image
 def open():
     global filename 
@@ -224,7 +234,7 @@ btn_open = tk.Button(frm_buttons, text="Open", command = open)
 btn_encode = tk.Button (frm_buttons, text = "Encode Mode", command = en_swap)
 btn_decode = tk.Button (frm_buttons, text = "Decode Mode", command = de_swap)
 #btn_save = tk.Button(frm_buttons, text="Save As...")
-btn_help = tk.Button(frm_buttons, text = "Help!")
+btn_help = tk.Button(frm_buttons, text = "Help!", command = help)
 btn_exit = tk.Button(frm_buttons, text = "Exit", command = exit)
 
 # Load button sidebar
@@ -264,4 +274,5 @@ frm_buttons.grid(row=0, column=0, sticky="ns", )
 frm_secrets.grid(row = 0, column = 1, sticky = "ns", padx = 20, pady = 50)
 
 # Start GUI
+window.eval('tk::PlaceWindow . center')
 window.mainloop()
