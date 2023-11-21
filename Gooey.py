@@ -17,11 +17,12 @@ filename = ''
 mes = tk.StringVar()
 pas = tk.StringVar()
 
-def en_swap():
+def ende_swap():
     global ende
     if ende == 'd':
         ende = 'e'
         lbl_depassword.grid_forget()
+        ent_password.delete(0, 'end')
         ent_password.grid_forget()
         btn_go.grid_forget()
         lbl_encode.grid(row = 0, column = 0, sticky = "ew", padx = 5, pady = 5)
@@ -31,21 +32,16 @@ def en_swap():
         btn_go.grid(row = 2, column = 1, padx = 5, pady = 10)
 
     else:
-        pass
-
-def de_swap():
-    global ende
-    if ende == 'e':
         ende = 'd'
         lbl_encode.grid_forget()
         lbl_enpassword.grid_forget()
+        ent_message.delete(0, 'end')
+        ent_password.delete(0, 'end')
         ent_message.grid_forget()
         ent_password.grid_forget()
         lbl_depassword.grid(row = 0, column = 0, sticky = "ew", padx = 5, pady = 5)
         ent_password.grid(row = 0, column = 1, sticky = "ew", padx = 5, pady = 5)
         btn_go.grid(row = 1, column = 1, padx = 5, pady = 10)
-    else:
-        pass
 
 def open():
     global filename 
@@ -148,8 +144,8 @@ def run ():
 frm_buttons = tk.Frame(window, relief=tk.RAISED, bd=2)
 lbl_menu = tk.Label(frm_buttons, text = "Menu")
 btn_open = tk.Button(frm_buttons, text="Open", command = open)
-btn_encode = tk.Button (frm_buttons, text = "Encode", command = en_swap)
-btn_decode = tk.Button (frm_buttons, text = "Decode", command = de_swap)
+btn_encode = tk.Button (frm_buttons, text = "Encode Mode", command = ende_swap)
+btn_decode = tk.Button (frm_buttons, text = "Decode Mode", command = ende_swap)
 #btn_save = tk.Button(frm_buttons, text="Save As...")
 btn_help = tk.Button(frm_buttons, text = "Help!")
 
@@ -165,7 +161,7 @@ lbl_encode = tk.Label (frm_secrets, text = "Enter text to encode: ")
 lbl_enpassword = tk.Label(frm_secrets, text = "Enter password to encrypt: ")
 lbl_depassword = tk.Label(frm_secrets, text = "Enter password to decode: ")
 ent_message = tk.Entry(frm_secrets, textvariable = mes, width = 50)
-ent_password = tk.Entry(frm_secrets, textvariable = pas, width = 50)
+ent_password = tk.Entry(frm_secrets, textvariable = pas, width = 50, show = '*')
 btn_go = tk.Button(frm_secrets, text = "Run", padx = 10, pady = 5, command = run)
 
 lbl_encode.grid(row = 0, column = 0, sticky = "ew", padx = 5, pady = 5)
