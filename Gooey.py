@@ -253,7 +253,7 @@ lbl_filename = tk.Label(frm_secrets, text = "No file loaded")
 lbl_enmode.grid(row = 0, column = 0, padx = 5, pady = 5)
 lbl_filename.grid(row = 0, column = 1, sticky = "ew", padx = 5, pady = 5)
 lbl_encode.grid(row = 1, column = 0, sticky = "ew", padx = 5, pady = 5)
-ent_message.grid(row = 1, column = 1, padx = 5, pady = 5)
+ent_message.grid(row = 1, column = 1, sticky = "ew", padx = 5, pady = 5)
 lbl_enpassword.grid(row = 2, column = 0, sticky = "ew", padx = 5, pady = 5)
 ent_password.grid(row = 2, column = 1, sticky = "ew", padx = 5, pady = 5)
 
